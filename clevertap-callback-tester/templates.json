@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "placeholders": {
+    "{{CALLBACK_URL}}": "The callback URL the user entered (available if a template needs it)",
+    "{{MSG_ID}}": "The msgId received from CleverTap (substituted safely, so quotes in it cannot break the JSON)",
+    "{{TIMESTAMP}}": "Fresh epoch seconds at send time, inserted as a string",
+    "{{TIMESTAMP:number}}": "Same value, inserted as a JSON number (only when it is the whole string value)"
+  },
+  "channels": {
+    "sms": {
+      "label": "SMS",
+      "docs": "https://docs.clevertap.com/docs/generic-sms",
+      "statuses": {
+        "delivered": {
+          "label": "Delivered",
+          "description": "SMS delivered to the handset. Maps to the Notification Delivered event.",
+          "request": {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": [
+              {
+                "event": "delivered",
+                "data": [
+                  {
+                    "ts": "{{TIMESTAMP:number}}",
+                    "meta": "{{MSG_ID}}",
+                    "description": "Delivered to handset"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "clicked": {
+          "label": "Clicked",
+          "description": "Recipient clicked a link in the SMS. Maps to the Notification Clicked event.",
+          "request": {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": [
+              {
+                "event": "clicked",
+                "data": [
+                  {
+                    "ts": "{{TIMESTAMP:number}}",
+                    "meta": "{{MSG_ID}}",
+                    "url": "www.CleverTap.com",
+                    "shortUrl": "https://bit.ly/3OjG22B"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "whatsapp": {
+      "label": "WhatsApp",
+      "docs": "https://docs.clevertap.com/docs/generic-whatsapp#message-status-callbacks",
+      "statuses": {
+        "delivered": {
+          "label": "Delivered",
+          "description": "Message delivered to the user's device.",
+          "request": {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "payloadVersion": "0.1",
+              "statuses": [
+                {
+                  "msgId": "{{MSG_ID}}",
+                  "status": "delivered",
+                  "timestamp": "{{TIMESTAMP}}"
+                }
+              ]
+            }
+          }
+        },
+        "viewed": {
+          "label": "Viewed",
+          "description": "Message read by the user. CleverTap's status value for this is \"read\".",
+          "request": {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "payloadVersion": "0.1",
+              "statuses": [
+                {
+                  "msgId": "{{MSG_ID}}",
+                  "status": "read",
+                  "timestamp": "{{TIMESTAMP}}"
+                }
+              ]
+            }
+          }
+        },
+        "clicked": {
+          "label": "Clicked",
+          "description": "User clicked a tracked button/link (provider click tracking).",
+          "request": {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "payloadVersion": "0.1",
+              "statuses": [
+                {
+                  "msgId": "{{MSG_ID}}",
+                  "status": "Clicked",
+                  "ts": "{{TIMESTAMP:number}}",
+                  "url": "www.google.com/19nov",
+                  "shortUrl": "https://bit.ly/3Oj42219",
+                  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36"
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
