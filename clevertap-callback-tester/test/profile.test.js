@@ -37,3 +37,10 @@ test('sms: account from "account" param, profile from second-last msgId part', (
   assert.match(deriveProfileUrl('https://in1.cb.wzrkt.com/sms/generic?account=A-B', sms, 'sms'), /^https:\/\/in1\./);
   assert.equal(deriveProfileUrl('https://cb.wzrkt.com/sms/generic?a=A-B', sms, 'sms'), null);
 });
+
+test('RCS derives the profile like SMS (dotted msgId), accepting account= or a=', () => {
+  const id = '918605962597.1400000001.1795068038.20261119.0.wzrk_default.-72400263.-1';
+  const want = 'https://in1.dashboard.clevertap.com/946-KR9-6K7Z/j72400263/profile-view.html';
+  assert.equal(deriveProfileUrl('https://in1.cb.wzrkt.com/rcs/generic?account=946-KR9-6K7Z', id, 'rcs'), want);
+  assert.equal(deriveProfileUrl('https://in1.cb.wzrkt.com/rcs/generic?a=946-KR9-6K7Z', id, 'rcs'), want);
+});

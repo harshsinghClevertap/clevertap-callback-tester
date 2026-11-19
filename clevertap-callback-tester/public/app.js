@@ -103,6 +103,10 @@
       url: 'https://cb.wzrkt.com/wa/generic/status?a=946-KR9-6K7Z',
       msgId: 'ID received from CleverTap, e.g. 216336|1794298065|20261112|191529|0',
     },
+    rcs: {
+      url: 'https://cb.wzrkt.com/rcs/generic?account=946-KR9-6K7Z',
+      msgId: 'ID received from CleverTap in the outbound RCS message payload',
+    },
   };
 
   function renderHint() {
@@ -111,9 +115,12 @@
       els.url.placeholder = ph.url;
       els.msgId.placeholder = ph.msgId;
     }
-    els.msgIdHint.textContent = state.channel === 'sms'
-      ? 'For SMS this is the value CleverTap sent in the $$MessageID field. It goes back as "meta".'
-      : 'For WhatsApp this is the msgId from the outbound message payload. It goes back as "msgId".';
+    const hints = {
+      sms: 'For SMS this is the value CleverTap sent in the $$MessageID field. It goes back as "meta".',
+      whatsapp: 'For WhatsApp this is the msgId from the outbound message payload. It goes back as "msgId".',
+      rcs: 'For RCS this is the msgId from the outbound message payload. It goes back as "meta".',
+    };
+    els.msgIdHint.textContent = hints[state.channel] || '';
   }
 
   function selectChannel(key) {

@@ -108,6 +108,17 @@ test('WhatsApp clicked payload uses Clicked status with numeric ts', () => {
   assert.equal(s.ts, 1647441774);
 });
 
+test('RCS payloads match the documented callback format', () => {
+  const doc = loadTemplatesFile(TEMPLATES_FILE);
+  assert.deepEqual(Object.keys(doc.channels.rcs.statuses), ['delivered', 'viewed', 'clicked']);
+  for (const k of ['delivered', 'viewed', 'clicked']) {
+    const b = buildRequest(doc, 'rcs', k, ctx).body;
+    assert.equal(b[0].event, k);
+    assert.equal(b[0].data[0].channel, 'RCS');
+    assert.equal(b[0].data[0].meta, ctx.msgId);
+  }
+});
+
 test('buildRequest rejects unknown channels and statuses, including prototype keys', () => {
   const doc = loadTemplatesFile(TEMPLATES_FILE);
   assert.throws(() => buildRequest(doc, 'email', 'delivered', ctx), (e) => e.code === 'UNKNOWN_TEMPLATE');

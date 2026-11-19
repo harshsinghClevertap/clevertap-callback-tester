@@ -4,6 +4,8 @@
  * Works out the CleverTap dashboard profile page where a WhatsApp
  * delivered / viewed / clicked callback gets recorded.
  *
+ * SMS and RCS use the same dotted msgId format and rules (RCS account may be "account" or "a").
+ *
  * WhatsApp:
  *   callback: https://in1.cb.wzrkt.com/wa/generic/status?a=<ACCOUNT_ID>
  *   msgId:    216336|1794298065|20261112|191529|0
@@ -34,8 +36,11 @@ function deriveProfileUrl(callbackUrl, msgId, channel = 'whatsapp') {
   const region = cbIndex === 1 ? labels[0] : 'eu1';
   if (!/^[a-z0-9-]+$/.test(region)) return null;
 
-  const isSms = channel === 'sms';
-  const accountId = (url.searchParams.get(isSms ? 'account' : 'a') || '').trim();
+  // SMS and RCS share the dotted msgId format; RCS callback URLs may use "account" or "a".
+  const isSms = channel === 'sms' || channel === 'rcs';
+  const accountId = (
+    (isSms ? url.searchParams.get('account') || (channel === 'rcs' ? url.searchParams.get('a') : '') : url.searchParams.get('a')) || ''
+  ).trim();
   if (!/^[A-Za-z0-9-]+$/.test(accountId)) return null;
 
   let profileId;

@@ -126,6 +126,81 @@
           }
         }
       }
+    },
+    "rcs": {
+      "label": "RCS",
+      "docs": "https://developer.clevertap.com/docs/generic-rcs-api#callback-event-payloads",
+      "statuses": {
+        "delivered": {
+          "label": "Delivered",
+          "description": "RCS message delivered to the device.",
+          "request": {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": [
+              {
+                "event": "delivered",
+                "data": [
+                  {
+                    "ts": "{{TIMESTAMP:number}}",
+                    "channel": "RCS",
+                    "meta": "{{MSG_ID}}"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "viewed": {
+          "label": "Viewed",
+          "description": "RCS message viewed (read) by the user.",
+          "request": {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": [
+              {
+                "event": "viewed",
+                "data": [
+                  {
+                    "ts": "{{TIMESTAMP:number}}",
+                    "channel": "RCS",
+                    "meta": "{{MSG_ID}}"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "clicked": {
+          "label": "Clicked",
+          "description": "User clicked a link in the RCS message.",
+          "request": {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": [
+              {
+                "event": "clicked",
+                "data": [
+                  {
+                    "ts": "{{TIMESTAMP:number}}",
+                    "channel": "RCS",
+                    "meta": "{{MSG_ID}}",
+                    "userAgent": "Mozilla/5.0 (Android 12; Mobile; rv:91.0)",
+                    "url": "https://example.com/features",
+                    "shortUrl": "https://bit.ly/example123"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
     }
   }
 }
